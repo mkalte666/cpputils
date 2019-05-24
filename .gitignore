@@ -1,3 +1,11 @@
+.vs/
+CMakeSettings.json
+build/
+bin/
+Debug/
+Release/
+CMakeCache.txt
+
 # Prerequisites
 *.d
 
