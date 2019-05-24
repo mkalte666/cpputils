@@ -14,23 +14,17 @@
 
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <https://www.gnu.org/licenses/>.
-cmake_minimum_required(VERSION 3.1.3 FATAL_ERROR)
-set (CMAKE_CXX_STANDARD 17)
 
-# disable in-source build. found at https://stackoverflow.com/questions/1208681/with-cmake-how-would-you-disable-in-source-builds
-set(CMAKE_DISABLE_SOURCE_CHANGES ON)
-set(CMAKE_DISABLE_IN_SOURCE_BUILD ON)
+function(runtimeCopy fileList)
+	foreach(filename ${fileList})
+		get_filename_component(filename_only ${filename} NAME)	
+		message("Copying file required for runtime: ${filename}")
+		configure_file(${filename} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${filename_only} COPYONLY)
+	endforeach()
+endfunction()
 
-# this is for the find package n stuff.
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake PARENT_SCOPE)
-
-project(cpputils)
-
-set (utilsIncludeDir ${CMAKE_CURRENT_SOURCE_DIR}/include)
-option(cpputilsBuildExamples OFF)
-
-add_subdirectory(src)
-
-include(cmake/funcForceOutputPrefixded.cmake)
-include(cmake/funcRuntimeCopy.cmake)
-
+function(runtimeCopyWin32 fileList)
+	if(WIN32)
+		runtimeCopy(${fileList})
+	endif()
+endfunction()
