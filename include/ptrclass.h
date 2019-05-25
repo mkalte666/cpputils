@@ -5,6 +5,9 @@
 
 #include <memory>
 
+/**
+ * \brief Parent struct that helps enforcing NoCopy rules
+*/
 struct NoCopy
 {
 public:
@@ -16,6 +19,10 @@ public:
     NoCopy& operator=(NoCopy&&) = delete;
 };
 
+
+/**
+ * \brief Parent Struct that helps enforcing NoMove rules
+*/
 struct NoMove
 {
 public:
@@ -27,44 +34,87 @@ public:
     NoMove& operator=(NoMove&&) = delete;
 };
 
+/**
+ * \brief Parent Struct that helps enforcing both NoCopy and NoMove rules
+*/
 struct NoAssign : public NoMove, public NoCopy{};
+
+/**
+ * \brief Parent Struct that enforces no copy or move rules 
+*/
 struct AllowAssign{};
 
+/**
+ * \brief Base class for pointer-only classes. 
+ * PtrClass is used to define types wich should be only instance as pointers.
+ * This is usefull for data classes wich should not be moved around, instances of servers or similar stuff. 
+ * \tparam T the type wich becomes a "PtrClass"
+ * \tparam AssignmentRestrictT the Assignement Restrictor
+ *      this can be used to enforce that no copying, no moving, or both can be done.
+*/
 template<class T, class AssignmentRestrictT = NoAssign>
 class PtrClass : public AssignmentRestrictT
 {
 public:
-    using Ptr = std::shared_ptr<T>;
-    using UPtr = std::unique_ptr<T>;
+    /// Typedef for the assignment restrictor type
     using AssignmentRestrictor = AssignmentRestrictT;
+    /// Typedef for the pointer type
+    using Ptr = std::shared_ptr<T>;
+    /// Typedef for the unique pointer type
+    using UPtr = std::unique_ptr<T>;
 
+    /// virtual destructor
     virtual ~PtrClass() {};
 
-    template <class...Args>
+    /**
+     * \brief Creates a shared instance of type Tinstance (defaults to T)
+     * Create a shared instance (std::shared_ptr) of the given instance type. 
+     * You can specify Tinstance to something different than T if you want to instance child classes
+     * \tparam Tinstance Type to instance (eg call operator new on)
+     * \note Eats the same parameters as the Constructor of Tinstance/T
+    */
+    template <class Tinstance=T, class...Args>
     static Ptr create(Args... args)
     {
-        return std::make_shared<_ctorWrapper>(std::forward<Args>(args)...);
+        return std::make_shared<_ctorWrapper<Tinstance>>(std::forward<Args>(args)...);
     }
 
-    template <class...Args>
+    /**
+     * \brief Creates a unique instance of type Tinstance (defaults to T)
+     * Create a unique instance (std::unique_ptr) of the given instance type.
+     * You can specify Tinstance to something different than T if you want to instance child classes
+     * \tparam Tinstance Type to instance (eg call operator new on)
+     * \note Eats the same parameters as the Constructor of Tinstance/T
+    */
+    template <class Tinstance = T, class...Args>
     static UPtr createUnique(Args... args)
     {
-        return std::make_unique<_ctorWrapper>(std::forward<Args>(args)...);
+        return std::make_unique<_ctorWrapper<T>>(std::forward<Args>(args)...);
     }
 
 private:
-    struct _ctorWrapper : public T
+    /**
+     * Struct that wrapps the Tinstance constructor to work around protected constructors
+     * \tparam Tinstance Type to instance (eg call operator new on)
+    */
+    template<class Tinstance>
+    struct _ctorWrapper : public Tinstance
     { 
         template <class...Args>
-        _ctorWrapper(Args...args) : T(std::forward<Args>(args)...){}
+        _ctorWrapper(Args...args) : Tinstance(std::forward<Args>(args)...){}
     };
 };
 
+/**
+ * \brief A Copyable version of PtrClass
+ * Same as PtrClass, however with AssignmentRestrictor set to NoMove
+*/
 template <class T>
 class CopyablePtrClass : public PtrClass<T,NoMove>
 {
 public:
     using PtrClass<T,NoMove>::PtrClass;
 };
+
 
 #endif //_ptrclass_h
