@@ -15,8 +15,17 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
+set(_cpputils_ptrclass_sources 
+	${utilsIncludeDir}/ptrclass/ptrclass.h
+	)
+
 add_library(_cpputils_ptrclass INTERFACE)
-target_include_directories(_cpputils_ptrclass INTERFACE ${utilsIncludeDir})
-target_sources(_cpputils_ptrclass INTERFACE ${utilsIncludeDir}/ptrclass.h)
+target_include_directories(_cpputils_ptrclass INTERFACE ${utilsIncludeDir}/ptrclass)
+target_sources(_cpputils_ptrclass INTERFACE ${_cpputils_ptrclass_sources})
 
 add_library(cpputils::ptrclass ALIAS _cpputils_ptrclass)
+
+if (${cpputilsBuildDocs})
+doxygen_add_docs(cpputils_ptrclass_doc ${_cpputils_ptrclass_sources} COMMENT "PtrClass Documentaion")
+add_dependencies(_cpputils_ptrclass cpputils_ptrclass_doc)
+endif()

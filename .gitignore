@@ -5,6 +5,7 @@ bin/
 Debug/
 Release/
 CMakeCache.txt
+out/
 
 # Prerequisites
 *.d

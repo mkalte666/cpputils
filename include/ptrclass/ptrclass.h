@@ -11,12 +11,12 @@
 struct NoCopy
 {
 public:
-    NoCopy() = default;
-    virtual ~NoCopy() = default;
-    NoCopy(const NoCopy&) = delete;
-    NoCopy(NoCopy&&) = default;
-    NoCopy& operator=(const NoCopy&) = delete;
-    NoCopy& operator=(NoCopy&&) = delete;
+    NoCopy() = default; //!< default constructor
+    virtual ~NoCopy() = default; //!< default virtual destructor
+    NoCopy(const NoCopy&) = delete; //!< deleted copy constructor
+    NoCopy(NoCopy&&) = default; //!< default movement constuctor
+    NoCopy& operator=(const NoCopy&) = delete; //!< deleted copy assignment operator
+    NoCopy& operator=(NoCopy&&) = default; //!< default move assignment operator
 };
 
 
@@ -26,12 +26,12 @@ public:
 struct NoMove
 {
 public:
-    NoMove() = default;
-    virtual ~NoMove() = default;
-    NoMove(const NoMove&) = default;
-    NoMove(NoMove&&) = delete;
-    NoMove& operator=(const NoMove&) = default;
-    NoMove& operator=(NoMove&&) = delete;
+    NoMove() = default; //<! default constructor
+    virtual ~NoMove() = default; //<! default virtaul destructor
+    NoMove(const NoMove&) = default; //<! default copy constructor
+    NoMove(NoMove&&) = delete; //<! deleted move constructor
+    NoMove& operator=(const NoMove&) = default; //<! default copy assingment operator
+    NoMove& operator=(NoMove&&) = delete; //!< deleted move assingment operator
 };
 
 /**

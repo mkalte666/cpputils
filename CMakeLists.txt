@@ -22,12 +22,18 @@ set(CMAKE_DISABLE_SOURCE_CHANGES ON)
 set(CMAKE_DISABLE_IN_SOURCE_BUILD ON)
 
 # this is for the find package n stuff.
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake PARENT_SCOPE)
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} PARENT_SCOPE)
 
 project(cpputils)
 
 set (utilsIncludeDir ${CMAKE_CURRENT_SOURCE_DIR}/include)
 option(cpputilsBuildExamples OFF)
+option(cpputilsBuildDocs OFF)
+if (${cpputilsBuildDocs})
+	set(DOXYGEN_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/docs)
+	find_package(Doxygen REQUIRED)
+endif()
 
 add_subdirectory(src)
 
