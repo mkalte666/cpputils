@@ -74,7 +74,7 @@ public:
      * \note Eats the same parameters as the Constructor of Tinstance/T
     */
     template <class Tinstance=T, class...Args>
-    static Ptr create(Args... args)
+    static Ptr create(Args&&... args)
     {
         return std::make_shared<_ctorWrapper<Tinstance>>(std::forward<Args>(args)...);
     }
@@ -87,9 +87,9 @@ public:
      * \note Eats the same parameters as the Constructor of Tinstance/T
     */
     template <class Tinstance = T, class...Args>
-    static UPtr createUnique(Args... args)
+    static UPtr createUnique(Args&&... args)
     {
-        return std::make_unique<_ctorWrapper<T>>(std::forward<Args>(args)...);
+        return std::make_unique<_ctorWrapper<Tinstance>>(std::forward<Args>(args)...);
     }
 
 private:
@@ -101,7 +101,7 @@ private:
     struct _ctorWrapper : public Tinstance
     { 
         template <class...Args>
-        _ctorWrapper(Args...args) : Tinstance(std::forward<Args>(args)...){}
+        _ctorWrapper(Args&&...args) : Tinstance(std::forward<Args>(args)...){}
     };
 };
 
