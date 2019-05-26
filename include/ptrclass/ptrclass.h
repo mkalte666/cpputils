@@ -102,6 +102,8 @@ private:
     { 
         template <class...Args>
         _ctorWrapper(Args&&...args) : Tinstance(std::forward<Args>(args)...){}
+
+        virtual ~_ctorWrapper() = default;
     };
 };
 
