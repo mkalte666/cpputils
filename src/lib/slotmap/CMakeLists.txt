@@ -14,5 +14,18 @@
 
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <https://www.gnu.org/licenses/>.
-add_subdirectory(ptrclass)
-add_subdirectory(slotmap)
+#
+set(_cpputils_slotmap_sources 
+	${utilsIncludeDir}/ptrclass/ptrclass.h
+	)
+
+add_library(_cpputils_slotmap INTERFACE)
+target_include_directories(_cpputils_slotmap INTERFACE ${utilsIncludeDir}/slotmap)
+target_sources(_cpputils_slotmap INTERFACE ${_cpputils_slotmap_sources})
+
+add_library(cpputils::slotmap ALIAS _cpputils_slotmap)
+
+if (${cpputilsBuildDocs})
+doxygen_add_docs(cpputils_slotmap_doc ${_cpputils_slotmap_sources} COMMENT "PtrClass Documentaion")
+add_dependencies(_cpputils_slotmap cpputils_slotmap_doc)
+endif()
