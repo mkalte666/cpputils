@@ -15,7 +15,8 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-function(runtimeCopy fileList)
+function(runtimeCopy)
+    set(fileList ${ARGV})
 	foreach(filename ${fileList})
 		get_filename_component(filename_only ${filename} NAME)	
 		message("Copying file required for runtime: ${filename}")
@@ -23,7 +24,8 @@ function(runtimeCopy fileList)
 	endforeach()
 endfunction()
 
-function(runtimeCopyWin32 fileList)
+function(runtimeCopyWin32)
+    set(fileList ${ARGV})
 	if(WIN32)
 		runtimeCopy(${fileList})
 	endif()
