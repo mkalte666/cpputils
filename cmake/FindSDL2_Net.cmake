@@ -70,6 +70,7 @@ include(FindPackageHandleStandardArgs)
 find_library(SDL2_NET_LIBRARY
 	NAMES
 	SDL2_Net
+	SDL2_net
 	HINTS
 	${SDL2_NET_LIB_HINTS}
 	PATHS
