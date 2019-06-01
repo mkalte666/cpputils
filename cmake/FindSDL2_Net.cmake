@@ -107,6 +107,7 @@ endif()
 find_path(SDL2_NET_INCLUDE_DIR
 	NAMES
 	SDL_Net.h # sdl2 net
+	SDL_net.h
 	HINTS
 	${SDL2_NET_INCLUDE_HINTS}
 	PATHS
