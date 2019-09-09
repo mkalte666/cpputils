@@ -1,26 +1,32 @@
 #include "ptrclass.h"
 
-class Something : public PtrClass<Something>
-{
+class Something : public PtrClass<Something> {
 public:
     int i;
+
 protected:
-    Something(int i) : i(i){}
+    Something(int i)
+        : i(i)
+    {
+    }
 };
 
-class SomethingElse : public CopyablePtrClass<SomethingElse>
-{
+class SomethingElse : public CopyablePtrClass<SomethingElse> {
 public:
     int i;
+
 protected:
-    SomethingElse(int i) : i(i){}
+    SomethingElse(int i)
+        : i(i)
+    {
+    }
 };
 
-int main(int argc, char**argv)
+int main(int argc, char** argv)
 {
-    //Something direct(0); // not allowed
+    // Something direct(0); // not allowed
     auto s = Something::create(1);
-    //auto sCopy = *s; // now allowed
+    // auto sCopy = *s; // now allowed
     auto s2 = SomethingElse::create(2);
     auto s2Copy = *s2; // allowed
     auto s3 = SomethingElse::create(3);

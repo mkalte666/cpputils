@@ -1,6 +1,6 @@
 /**
  * This file is part of cpputils (https://github.com/mkalte666/cpputils)
- * Copyright (c) 2019 Malte Kieﬂling.
+ * Copyright (c) 2019 Malte Kie√üling.
  *
  * cpputils is free software: you can redistribute
  * it and/or modify it under the terms of the GNU General Public
@@ -64,7 +64,7 @@ struct hash<SlotMapIndex> {
         return s.toInt();
     }
 };
-}
+} // namespace std
 
 template <class T, size_t baseSize = 256>
 class SlotMap {
@@ -111,8 +111,7 @@ public:
             auto maxIndex = baseSize * (storage->size() - 1) + storage->back()->size;
             do {
                 index += inc;
-            } while (
-                index >= 0 && index < maxIndex && (*storage)[index / baseSize]->data[index % baseSize].free);
+            } while (index >= 0 && index < maxIndex && (*storage)[index / baseSize]->data[index % baseSize].free);
             return *this;
         }
 
@@ -122,8 +121,7 @@ public:
             auto maxIndex = baseSize * (storage->size() - 1) + storage->back()->size;
             do {
                 index += inc;
-            } while (
-                index >= 0 && index < maxIndex && (*storage)[index / baseSize]->data[index % baseSize].free);
+            } while (index >= 0 && index < maxIndex && (*storage)[index / baseSize]->data[index % baseSize].free);
             return t;
         }
 
@@ -132,8 +130,7 @@ public:
             auto maxIndex = baseSize * (storage->size() - 1) + storage->back()->size;
             do {
                 index -= inc;
-            } while (
-                index >= 0 && index < maxIndex && (*storage)[index / baseSize]->data[index % baseSize].free);
+            } while (index >= 0 && index < maxIndex && (*storage)[index / baseSize]->data[index % baseSize].free);
             return *this;
         }
 
@@ -143,52 +140,35 @@ public:
             auto maxIndex = baseSize * (storage->size() - 1) + storage->back()->size;
             do {
                 index -= inc;
-            } while (
-                index >= 0 && index < maxIndex && (*storage)[index / baseSize]->data[index % baseSize].free);
+            } while (index >= 0 && index < maxIndex && (*storage)[index / baseSize]->data[index % baseSize].free);
             return t;
         }
 
-        bool operator<(const iterator& other) const
-        {
-            return index < other.index;
-        }
-        bool operator<(size_t other) const
-        {
-            return index < other;
-        }
-        bool operator>(const iterator& other) const
-        {
-            return index > other.index;
-        }
-        bool operator>(size_t other) const
-        {
-            return index > other;
-        }
+        bool operator<(const iterator& other) const { return index < other.index; }
+        bool operator<(size_t other) const { return index < other; }
+        bool operator>(const iterator& other) const { return index > other.index; }
+        bool operator>(size_t other) const { return index > other; }
         bool operator==(const iterator& other) const
         {
             return index == other.index;
         }
-        bool operator==(size_t other) const
-        {
-            return index == other;
-        }
+        bool operator==(size_t other) const { return index == other; }
         bool operator!=(const iterator& other) const
         {
             return index != other.index;
         }
-        bool operator!=(size_t other) const
-        {
-            return index != other;
-        }
+        bool operator!=(size_t other) const { return index != other; }
 
         T& operator*()
         {
-            return *reinterpret_cast<T*>(&(*storage)[index / baseSize]->data[index % baseSize].data);
+            return *reinterpret_cast<T*>(
+                &(*storage)[index / baseSize]->data[index % baseSize].data);
         }
 
         T* operator->()
         {
-            return reinterpret_cast<T*>(&(*storage)[index / baseSize]->data[index % baseSize].data);
+            return reinterpret_cast<T*>(
+                &(*storage)[index / baseSize]->data[index % baseSize].data);
         }
 
         StorageType& getTag() const
@@ -204,10 +184,7 @@ public:
             return i;
         }
 
-        uint32_t getRawIndex() const
-        {
-            return index;
-        }
+        uint32_t getRawIndex() const { return index; }
 
     private:
         const ChunkArray* storage;
@@ -241,13 +218,16 @@ public:
 
     iterator end() const
     {
-        return iterator(&data, static_cast<uint32_t>(currentChunk * baseSize + data[currentChunk]->size), 1);
+        return iterator(&data,
+            static_cast<uint32_t>(currentChunk * baseSize + data[currentChunk]->size),
+            1);
     }
 
     iterator rbegin() const
     {
 
-        iterator iter(&data, currentChunk * baseSize + data[currentChunk]->size, -1);
+        iterator iter(&data, currentChunk * baseSize + data[currentChunk]->size,
+            -1);
         if (iter.getTag().free) {
             iter++; // automatically goes to first free or end()
         }
@@ -263,12 +243,14 @@ public:
 
     T& operator[](const IndexType& index)
     {
-        return *reinterpret_cast<T*>(&data[index.index / baseSize]->data[index.index % baseSize].data);
+        return *reinterpret_cast<T*>(
+            &data[index.index / baseSize]->data[index.index % baseSize].data);
     }
     T& operator[](uint64_t intIndex)
     {
         IndexType index(intIndex);
-        return *reinterpret_cast<T*>(&data[index.index / baseSize]->data[index.index % baseSize].data);
+        return *reinterpret_cast<T*>(
+            &data[index.index / baseSize]->data[index.index % baseSize].data);
     }
 
     iterator find(const IndexType& index) const

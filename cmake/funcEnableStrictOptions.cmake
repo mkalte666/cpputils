@@ -1,4 +1,4 @@
-# CMakeLists.txt
+# funcForceStrictOptions.cmake
 #
 # Copyright (C) 2019  Malte Kießling
 #
@@ -14,19 +14,18 @@
 # You should have received a copy of the GNU General Public License along with
 # this program.  If not, see <https://www.gnu.org/licenses/>.
 
-function(runtimeCopy)
-  set(fileList ${ARGV})
-  foreach(filename ${fileList})
-    get_filename_component(filename_only ${filename} NAME)
-    message("Copying file required for runtime: ${filename}")
-    configure_file(${filename}
-                   ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${filename_only} COPYONLY)
-  endforeach()
-endfunction()
-
-function(runtimeCopyWin32)
-  set(fileList ${ARGV})
-  if(WIN32)
-    runtimecopy(${fileList})
-  endif()
+function(enableStrictOptions target)
+  target_compile_options(
+    ${target}
+    PRIVATE
+      $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>,$<CXX_COMPILER_ID:GNU>>:
+      -Wall
+      -Werror
+      -pedantic-errors
+      -Wextra
+      -Wconversion
+      -Wsign-conversion>
+      $<$<CXX_COMPILER_ID:MSVC>:
+      /W4
+      /WX>)
 endfunction()
