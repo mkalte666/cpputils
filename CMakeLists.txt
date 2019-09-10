@@ -39,4 +39,4 @@ add_subdirectory(src)
 
 include(cmake/funcForceOutputPrefixded.cmake)
 include(cmake/funcRuntimeCopy.cmake)
-
+include(cmake/funcEnableStrictOptions.cmake)
