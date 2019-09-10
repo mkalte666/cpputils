@@ -6,6 +6,8 @@ Debug/
 Release/
 CMakeCache.txt
 out/
+cmake-build-*/
+.idea/
 
 # Prerequisites
 *.d
