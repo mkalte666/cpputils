@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License along with
 # this program.  If not, see <https://www.gnu.org/licenses/>.
 #
-set(_cpputils_linalg_sources ${utilsIncludeDir}/ptrclass/ptrclass.h)
+set(_cpputils_linalg_sources ${utilsIncludeDir}/linalg/vec.h)
 
 add_library(_cpputils_linalg INTERFACE)
 target_include_directories(_cpputils_linalg INTERFACE ${utilsIncludeDir}/linalg)
