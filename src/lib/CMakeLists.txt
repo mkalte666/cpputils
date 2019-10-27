@@ -15,3 +15,4 @@
 # this program.  If not, see <https://www.gnu.org/licenses/>.
 add_subdirectory(ptrclass)
 add_subdirectory(slotmap)
+add_subdirectory(linalg)
