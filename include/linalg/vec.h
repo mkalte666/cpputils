@@ -24,6 +24,7 @@
 #include <array>
 #include <cmath>
 #include <cstdlib>
+#include <string>
 #include <type_traits>
 #include <vector>
 
@@ -358,9 +359,115 @@ struct Vector {
     }
 
     /**
+     * \brief Convert this vector to a string
+     * \return A string in the format "x;y;z;w;element5;...;elementN"
+     */
+    std::string toString() const
+    {
+        std::string result;
+
+        for (size_t i = 0; i < size; i++) {
+            if (i != 0) {
+                result += ";";
+            }
+            result += std::to_string(data[i]);
+        }
+
+        return result;
+    }
+
+    /**
+     * \brief Copy raw data for this vector into bytes
+     * \param vec Vector to serialize to bytes
+     * \param bytes Target std::vector
+     * \return number of bytes copied
+     * \note This is UB
+     */
+    size_t toBytes(std::vector<uint8_t>& bytes)
+    {
+        bytes.reserve(bytes.size() + nBytes);
+
+        // do not copy directly as the alignment might be weird between platforms
+        for (size_t i = 0; i < size; i++) {
+            uint8_t* p = reinterpret_cast<uint8_t*>(&data[i]);
+            bytes.insert(bytes.end(), p, p + sizeof(T));
+        }
+
+        return nBytes;
+    }
+
+    /**
+     * \brief Serialize a vector to bytes
+     * \param vec The vector to serialize
+     * \param bytes Pointer to an array of bytes of at least maxLen in size
+     * \param maxLen max length. If maxLen < size, the function will retunr 0
+     * \return number of bytes written to the array
+     */
+    size_t toBytes(uint8_t* bytes, size_t maxLen)
+    {
+        if (maxLen < nBytes) {
+            return 0;
+        }
+
+        for (size_t i = 0; i < size; i++) {
+            *reinterpret_cast<T*>(bytes) = data[i];
+            bytes = bytes + sizeof(T);
+        }
+
+        return nBytes;
+    }
+
+    /**
+     * \brief Create a vector from a byte stream in the form of two iterators
+     * \param begin begin of part where data should be copied from. Will be increased if successful
+     * \param end end of vector.
+     * \return A new Vector; Will be default constructed if number of
+     */
+    void fromBytes(std::vector<uint8_t>::iterator& begin, const std::vector<uint8_t>::iterator& end)
+    {
+        if (std::distance(begin, end) < nBytes) {
+            return;
+        }
+
+        // do not copy directly as the alignment might be weird between platforms
+        for (size_t i = 0; i < size; i++) {
+            data[i] = *reinterpret_cast<T*>(&(*begin));
+            std::advance(begin, sizeof(T));
+        }
+    }
+
+    /**
+     * \brief Create a vector from a raw stream of bytes
+     * \param bytes Pointer to an array (**) that is increased by the number of bytes read from it
+     * \param maxLen maximum number of bytes available in *bytes
+     * \return A new vector
+     * \note if maxLen is < size, bytes will not be increased and a default constructed vector is retunred
+     */
+    void fromBytes(uint8_t** bytes, size_t maxLen)
+    {
+        if (maxLen < size) {
+            return;
+        }
+
+        uint8_t* p = *bytes;
+
+        for (size_t i = 0; i < size; i++) {
+            data[i] = *reinterpret_cast<T*>(p);
+            p = p + sizeof(T);
+        }
+
+        *bytes = p;
+    }
+
+    /**
      * \brief Data stored in this vector
      */
     std::array<T, size> data;
+
+    /**
+     * \brief Size (in bytes) needed to represent data
+     */
+    static const size_t nBytes = sizeof(T) * size;
 };
 
 #endif // CPPUTILS_VEC_H
