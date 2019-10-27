@@ -17,8 +17,7 @@
 set(_cpputils_linalg_sources ${utilsIncludeDir}/ptrclass/ptrclass.h)
 
 add_library(_cpputils_linalg INTERFACE)
-target_include_directories(_cpputils_linalg
-                           INTERFACE ${utilsIncludeDir}/linalg)
+target_include_directories(_cpputils_linalg INTERFACE ${utilsIncludeDir}/linalg)
 target_sources(_cpputils_linalg INTERFACE ${_cpputils_linalg_sources})
 
 add_library(cpputils::linalg ALIAS _cpputils_linalg)

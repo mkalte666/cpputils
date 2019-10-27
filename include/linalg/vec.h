@@ -21,18 +21,18 @@
 #ifndef CPPUTILS_VEC_H
 #define CPPUTILS_VEC_H
 
+#include <array>
+#include <cmath>
 #include <cstdlib>
 #include <type_traits>
-#include <array>
 #include <vector>
-#include <cmath>
 
 /**
  * \brief Mathematical Vector Class
  * \tparam T Underlying data type
  * \tparam size Number of elements in vector
  */
-template<class T, size_t size>
+template <class T, size_t size>
 struct Vector {
     static_assert(size > 0);
     static_assert(std::is_arithmetic<T>::value);
@@ -46,7 +46,8 @@ struct Vector {
      * \brief Create vector; All elements will have the same value
      * \param value The value for all elements
      */
-    explicit Vector(T value) {
+    explicit Vector(T value)
+    {
         for (size_t i = 0; i < size; i++) {
             data[i] = value;
         }
@@ -56,7 +57,7 @@ struct Vector {
      * \brief Copy Constructor
      * \param other
      */
-    explicit Vector(const Vector<T,size>& other)
+    explicit Vector(const Vector<T, size>& other)
     {
         data = other.data;
     }
@@ -75,7 +76,7 @@ struct Vector {
      * \param other
      * \return Reference to this
      */
-    Vector<T,size>& operator =(const Vector<T, size>& other)
+    Vector<T, size>& operator=(const Vector<T, size>& other)
     {
         data = other.data;
 
@@ -87,7 +88,7 @@ struct Vector {
      * \param other
      * \return Reference to this
      */
-    Vector<T,size>& operator =(const Vector<T, size>&& other)
+    Vector<T, size>& operator=(const Vector<T, size>&& other)
     {
         data = std::move(other.data);
 
@@ -100,18 +101,19 @@ struct Vector {
      * \param args
      * Argument count must be excatly the number of elements in this vector (aka size); The type must match
      */
-    template<class ...Args>
-    explicit Vector(Args&& ...args)
+    template <class... Args>
+    explicit Vector(Args&&... args)
     {
         static_assert(size == sizeof...(Args), "Numer of arguments must be the same as vector size");
-        data = {args...};
+        data = { args... };
     }
 
     /**
      * \brief Access to the first element
      * \return Reference to the first element
      */
-    inline T& x() {
+    inline T& x()
+    {
         return data[0];
     }
 
@@ -119,7 +121,8 @@ struct Vector {
      * \brief Access to the first element
      * \return Reference to the first element
      */
-    inline T& r() {
+    inline T& r()
+    {
         return x();
     }
 
@@ -127,8 +130,8 @@ struct Vector {
      * \brief Access to the second element, if present
      * \return Reference to the second element
      */
-    template<size_t s = size>
-    inline std::enable_if_t<(s>1&&s==size), T&>
+    template <size_t s = size>
+    inline std::enable_if_t<(s > 1 && s == size), T&>
     y()
     {
         return data[1];
@@ -138,8 +141,8 @@ struct Vector {
      * \brief Access to the second element, if present
      * \return Reference to the second element
      */
-    template<size_t s = size>
-    inline std::enable_if_t<(s>1&&s==size), T&>
+    template <size_t s = size>
+    inline std::enable_if_t<(s > 1 && s == size), T&>
     g()
     {
         return y();
@@ -149,8 +152,8 @@ struct Vector {
      * \brief Access to the third element, if present
      * \return Reference to the third element
      */
-    template<size_t s = size>
-    inline std::enable_if_t<(s>2&&s==size), T&>
+    template <size_t s = size>
+    inline std::enable_if_t<(s > 2 && s == size), T&>
     z()
     {
         return data[2];
@@ -160,8 +163,8 @@ struct Vector {
      * \brief Access to the third element, if present
      * \return Reference to the third element
      */
-    template<size_t s = size>
-    inline std::enable_if_t<(s>2&&s==size), T&>
+    template <size_t s = size>
+    inline std::enable_if_t<(s > 2 && s == size), T&>
     b()
     {
         return z();
@@ -171,8 +174,8 @@ struct Vector {
      * \brief Access to the fourth element, if present
      * \return Reference to the fourth element
      */
-    template<size_t s = size>
-    inline std::enable_if_t<(s>3&&s==size), T&>
+    template <size_t s = size>
+    inline std::enable_if_t<(s > 3 && s == size), T&>
     w()
     {
         return data[3];
@@ -182,8 +185,8 @@ struct Vector {
      * \brief Access to the fourth element, if present
      * \return Reference to the fourth element
      */
-    template<size_t s = size>
-    inline std::enable_if_t<(s>3&&s==size), T&>
+    template <size_t s = size>
+    inline std::enable_if_t<(s > 3 && s == size), T&>
     a()
     {
         return w();
@@ -194,7 +197,8 @@ struct Vector {
      * \note this is the same as if calling vec.dot(vec)
      * \return The squared magnitude of this vector
      */
-    T magnitudeSquared() const {
+    T magnitudeSquared() const
+    {
         return dot(*this);
     }
 
@@ -202,17 +206,19 @@ struct Vector {
      * \brief Calculate the magnitude of this vector
      * \return The magnitude of this vector
      */
-    T magnitude() const {
+    T magnitude() const
+    {
         return static_cast<T>(sqrt(static_cast<double>(magnitudeSquared())));
     }
 
     /**
      * \brief Normalize this vector
      */
-    void normalize() {
+    void normalize()
+    {
         auto mag = magnitude();
         for (size_t i = 0; i < size; i++) {
-            data[i] = data[i]/mag;
+            data[i] = data[i] / mag;
         }
     }
 
@@ -220,7 +226,8 @@ struct Vector {
      * \brief Calculate the normalized form of this vector, then return it without modifying this vector
      * \return The normalzied version of this vector
      */
-    Vector<T,size> normalized() const {
+    Vector<T, size> normalized() const
+    {
         auto cpy = *this;
         cpy.normalize();
         return cpy;
@@ -235,7 +242,7 @@ struct Vector {
     {
         T res = static_cast<T>(0);
         for (size_t i = 0; i < size; i++) {
-            res += data[i]*other.data[i];
+            res += data[i] * other.data[i];
         }
 
         return res;
@@ -247,11 +254,11 @@ struct Vector {
      * \param other
      * \return The Cross Product of this vector with another
      */
-    template<size_t s = size>
-    std::enable_if_t<(s==2&&s==size), T>
-    cross(const Vector<T,size>& other) const
+    template <size_t s = size>
+    std::enable_if_t<(s == 2 && s == size), T>
+    cross(const Vector<T, size>& other) const
     {
-        return x()*other.y()-other.x()*y();
+        return x() * other.y() - other.x() * y();
     }
 
     /**
@@ -260,14 +267,14 @@ struct Vector {
      * \param other
      * \return The Cross Product of this vector with another
      */
-    template<size_t s = size>
-    std::enable_if_t<(s==3&&s==size), Vector<T,size>>
-    cross(const Vector<T,size>& other) const
+    template <size_t s = size>
+    std::enable_if_t<(s == 3 && s == size), Vector<T, size>>
+    cross(const Vector<T, size>& other) const
     {
-        Vector<T,size> res;
-        res.x() = y()*other.z()-z()*other.y();
-        res.y() = z()*other.x()-x()*other.z();
-        res.z() = x()*other.y()-y()*other.x();
+        Vector<T, size> res;
+        res.x() = y() * other.z() - z() * other.y();
+        res.y() = z() * other.x() - x() * other.z();
+        res.z() = x() * other.y() - y() * other.x();
 
         return res;
     }
@@ -277,7 +284,8 @@ struct Vector {
      * \param value
      * \return Reference to this vector scaled by value
      */
-    Vector<T,size>& operator*=(T value) {
+    Vector<T, size>& operator*=(T value)
+    {
         for (size_t i; i < size; i++) {
             data[i] *= value;
         }
@@ -290,7 +298,8 @@ struct Vector {
      * \param value
      * \return Copy of this vector scaled by value
      */
-    Vector<T,size> operator*(T value) const {
+    Vector<T, size> operator*(T value) const
+    {
         auto res = *this;
         res *= value;
         return value;
@@ -301,7 +310,8 @@ struct Vector {
      * \param other
      * \return Reference to this after the operation
      */
-    Vector<T,size>& operator+=(const Vector<T,size>& other) {
+    Vector<T, size>& operator+=(const Vector<T, size>& other)
+    {
         for (size_t i = 0; i < size; i++) {
             data[i] += other.data[i];
         }
@@ -314,7 +324,8 @@ struct Vector {
      * \param other
      * \return The result of this+other
      */
-    Vector<T,size> operator+(const Vector<T,size>& other) const{
+    Vector<T, size> operator+(const Vector<T, size>& other) const
+    {
         auto res = *this;
         res += other;
         return res;
@@ -325,7 +336,8 @@ struct Vector {
      * \param other
      * \return Reference to this after the operation
      */
-    Vector<T, size>& operator-=(const Vector<T,size>& other) {
+    Vector<T, size>& operator-=(const Vector<T, size>& other)
+    {
         for (size_t i = 0; i < size; i++) {
             data[i] -= other.data[i];
         }
@@ -338,7 +350,8 @@ struct Vector {
      * \param other
      * \return The result of this-other
      */
-    Vector<T,size> operator-(const Vector<T,size>& other) const{
+    Vector<T, size> operator-(const Vector<T, size>& other) const
+    {
         auto res = *this;
         res -= other;
         return res;
@@ -347,7 +360,7 @@ struct Vector {
     /**
      * \brief Data stored in this vector
      */
-    std::array<T,size> data;
+    std::array<T, size> data;
 };
 
 #endif // CPPUTILS_VEC_H
