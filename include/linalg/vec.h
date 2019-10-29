@@ -35,8 +35,9 @@
  */
 template <class T, size_t size>
 struct Vector {
-    static_assert(size > 0);
-    static_assert(std::is_arithmetic<T>::value);
+    static_assert(size > 0, "A vector needs at least one element");
+    static_assert(std::is_arithmetic<T>::value, "T must be an arithmetic type");
+    using VecType = Vector<T, size>;
 
     /**
      * \brief Default constructor
@@ -58,7 +59,7 @@ struct Vector {
      * \brief Copy Constructor
      * \param other
      */
-    explicit Vector(const Vector<T, size>& other)
+    explicit Vector(const VecType& other)
     {
         data = other.data;
     }
@@ -67,7 +68,7 @@ struct Vector {
      * \brief Move constructor
      * \param other
      */
-    explicit Vector(Vector<T, size>&& other)
+    explicit Vector(VecType&& other)
     {
         data = std::move(other.data);
     }
@@ -77,7 +78,7 @@ struct Vector {
      * \param other
      * \return Reference to this
      */
-    Vector<T, size>& operator=(const Vector<T, size>& other)
+    VecType& operator=(const VecType& other)
     {
         data = other.data;
 
@@ -89,7 +90,7 @@ struct Vector {
      * \param other
      * \return Reference to this
      */
-    Vector<T, size>& operator=(const Vector<T, size>&& other)
+    VecType& operator=(const VecType&& other)
     {
         data = std::move(other.data);
 
@@ -227,7 +228,7 @@ struct Vector {
      * \brief Calculate the normalized form of this vector, then return it without modifying this vector
      * \return The normalzied version of this vector
      */
-    Vector<T, size> normalized() const
+    VecType normalized() const
     {
         auto cpy = *this;
         cpy.normalize();
@@ -239,7 +240,7 @@ struct Vector {
      * \param other
      * \return The dot product of this vector and other
      */
-    T dot(const Vector<T, size>& other) const
+    T dot(const VecType& other) const
     {
         T res = static_cast<T>(0);
         for (size_t i = 0; i < size; i++) {
@@ -257,7 +258,7 @@ struct Vector {
      */
     template <size_t s = size>
     std::enable_if_t<(s == 2 && s == size), T>
-    cross(const Vector<T, size>& other) const
+    cross(const VecType& other) const
     {
         return x() * other.y() - other.x() * y();
     }
@@ -269,10 +270,10 @@ struct Vector {
      * \return The Cross Product of this vector with another
      */
     template <size_t s = size>
-    std::enable_if_t<(s == 3 && s == size), Vector<T, size>>
-    cross(const Vector<T, size>& other) const
+    std::enable_if_t<(s == 3 && s == size), VecType>
+    cross(const VecType& other) const
     {
-        Vector<T, size> res;
+        VecType res;
         res.x() = y() * other.z() - z() * other.y();
         res.y() = z() * other.x() - x() * other.z();
         res.z() = x() * other.y() - y() * other.x();
@@ -285,7 +286,7 @@ struct Vector {
      * \param value
      * \return Reference to this vector scaled by value
      */
-    Vector<T, size>& operator*=(T value)
+    VecType& operator*=(T value)
     {
         for (size_t i; i < size; i++) {
             data[i] *= value;
@@ -299,7 +300,7 @@ struct Vector {
      * \param value
      * \return Copy of this vector scaled by value
      */
-    Vector<T, size> operator*(T value) const
+    VecType operator*(T value) const
     {
         auto res = *this;
         res *= value;
@@ -311,7 +312,7 @@ struct Vector {
      * \param other
      * \return Reference to this after the operation
      */
-    Vector<T, size>& operator+=(const Vector<T, size>& other)
+    VecType& operator+=(const VecType& other)
     {
         for (size_t i = 0; i < size; i++) {
             data[i] += other.data[i];
@@ -325,7 +326,7 @@ struct Vector {
      * \param other
      * \return The result of this+other
      */
-    Vector<T, size> operator+(const Vector<T, size>& other) const
+    VecType operator+(const VecType& other) const
     {
         auto res = *this;
         res += other;
@@ -337,7 +338,7 @@ struct Vector {
      * \param other
      * \return Reference to this after the operation
      */
-    Vector<T, size>& operator-=(const Vector<T, size>& other)
+    VecType& operator-=(const VecType& other)
     {
         for (size_t i = 0; i < size; i++) {
             data[i] -= other.data[i];
@@ -351,7 +352,7 @@ struct Vector {
      * \param other
      * \return The result of this-other
      */
-    Vector<T, size> operator-(const Vector<T, size>& other) const
+    VecType operator-(const VecType& other) const
     {
         auto res = *this;
         res -= other;
