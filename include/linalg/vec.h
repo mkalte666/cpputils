@@ -472,7 +472,6 @@ struct Vector {
      * \param vec Vector to serialize to bytes
      * \param bytes Target std::vector
      * \return number of bytes copied
-     * \note This is UB
      */
     size_t toBytes(std::vector<uint8_t>& bytes)
     {
@@ -516,7 +515,7 @@ struct Vector {
      */
     void fromBytes(std::vector<uint8_t>::iterator& begin, const std::vector<uint8_t>::iterator& end)
     {
-        if (std::distance(begin, end) < nBytes) {
+        if (std::distance(begin, end) < static_cast<ptrdiff_t>(nBytes)) {
             return;
         }
 
