@@ -567,4 +567,24 @@ Vector<T, size> operator*(const T& s, const Vector<T, size>& v)
     return v * s;
 }
 
+using vec1d = Vector<double, 1>;
+using vec2d = Vector<double, 2>;
+using vec3d = Vector<double, 3>;
+using vec4d = Vector<double, 4>;
+
+using vec1f = Vector<float, 1>;
+using vec2f = Vector<float, 2>;
+using vec3f = Vector<float, 3>;
+using vec4f = Vector<float, 4>;
+
+using vec1i32 = Vector<int32_t, 1>;
+using vec2i32 = Vector<int32_t, 2>;
+using vec3i32 = Vector<int32_t, 3>;
+using vec4i32 = Vector<int32_t, 4>;
+
+using vec1i64 = Vector<int64_t, 1>;
+using vec2i64 = Vector<int64_t, 2>;
+using vec3i64 = Vector<int64_t, 3>;
+using vec4i64 = Vector<int64_t, 4>;
+
 #endif // CPPUTILS_VEC_H

@@ -193,4 +193,9 @@ struct Quaternion : public Vector<T, 4> {
     }
 };
 
+using quatf = Quaternion<float>;
+using quatd = Quaternion<double>;
+using quati32 = Quaternion<int32_t>;
+using quati64 = Quaternion<int64_t>;
+
 #endif //ARIEL_QUATERNION_H
