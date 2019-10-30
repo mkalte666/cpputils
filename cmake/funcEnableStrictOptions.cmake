@@ -22,6 +22,7 @@ function(enableStrictOptions target)
       -Wall
       -Werror
       -pedantic-errors
+      -pedantic
       -Wextra
       -Wconversion
       -Wsign-conversion>

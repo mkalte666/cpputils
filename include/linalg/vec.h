@@ -59,7 +59,7 @@ struct Vector {
      * \brief Copy Constructor
      * \param other
      */
-    explicit Vector(const VecType& other)
+    Vector(const VecType& other)
     {
         data = other.data;
     }
@@ -68,7 +68,7 @@ struct Vector {
      * \brief Move constructor
      * \param other
      */
-    explicit Vector(VecType&& other)
+    Vector(VecType&& other)
     {
         data = std::move(other.data);
     }
@@ -114,7 +114,16 @@ struct Vector {
      * \brief Access to the first element
      * \return Reference to the first element
      */
-    inline T& x()
+    T& x()
+    {
+        return data[0];
+    }
+
+    /**
+     * \brief
+     * \return
+     */
+    const T& x() const
     {
         return data[0];
     }
@@ -123,7 +132,16 @@ struct Vector {
      * \brief Access to the first element
      * \return Reference to the first element
      */
-    inline T& r()
+    T& r()
+    {
+        return x();
+    }
+
+    /**
+     * \brief
+     * \return
+     */
+    const T& r() const
     {
         return x();
     }
@@ -133,8 +151,20 @@ struct Vector {
      * \return Reference to the second element
      */
     template <size_t s = size>
-    inline std::enable_if_t<(s > 1 && s == size), T&>
+    std::enable_if_t<(s > 1 && s == size), T&>
     y()
+    {
+        return data[1];
+    }
+
+    /**
+     * \brief
+     * \tparam s
+     * \return
+     */
+    template <size_t s = size>
+    std::enable_if_t<(s > 1 && s == size), const T&>
+    y() const
     {
         return data[1];
     }
@@ -144,8 +174,20 @@ struct Vector {
      * \return Reference to the second element
      */
     template <size_t s = size>
-    inline std::enable_if_t<(s > 1 && s == size), T&>
+    std::enable_if_t<(s > 1 && s == size), T&>
     g()
+    {
+        return y();
+    }
+
+    /**
+     * \brief
+     * \tparam s
+     * \return
+     */
+    template <size_t s = size>
+    std::enable_if_t<(s > 1 && s == size), const T&>
+    g() const
     {
         return y();
     }
@@ -155,8 +197,20 @@ struct Vector {
      * \return Reference to the third element
      */
     template <size_t s = size>
-    inline std::enable_if_t<(s > 2 && s == size), T&>
+    std::enable_if_t<(s > 2 && s == size), T&>
     z()
+    {
+        return data[2];
+    }
+
+    /**
+     * \brief
+     * \tparam s
+     * \return
+     */
+    template <size_t s = size>
+    std::enable_if_t<(s > 2 && s == size), const T&>
+    z() const
     {
         return data[2];
     }
@@ -166,8 +220,20 @@ struct Vector {
      * \return Reference to the third element
      */
     template <size_t s = size>
-    inline std::enable_if_t<(s > 2 && s == size), T&>
+    std::enable_if_t<(s > 2 && s == size), T&>
     b()
+    {
+        return z();
+    }
+
+    /**
+     * \brief
+     * \tparam s
+     * \return
+     */
+    template <size_t s = size>
+    std::enable_if_t<(s > 2 && s == size), const T&>
+    b() const
     {
         return z();
     }
@@ -177,8 +243,20 @@ struct Vector {
      * \return Reference to the fourth element
      */
     template <size_t s = size>
-    inline std::enable_if_t<(s > 3 && s == size), T&>
+    std::enable_if_t<(s > 3 && s == size), T&>
     w()
+    {
+        return data[3];
+    }
+
+    /**
+     * \brief
+     * \tparam s
+     * \return
+     */
+    template <size_t s = size>
+    std::enable_if_t<(s > 3 && s == size), const T&>
+    w() const
     {
         return data[3];
     }
@@ -188,8 +266,20 @@ struct Vector {
      * \return Reference to the fourth element
      */
     template <size_t s = size>
-    inline std::enable_if_t<(s > 3 && s == size), T&>
+    std::enable_if_t<(s > 3 && s == size), T&>
     a()
+    {
+        return w();
+    }
+
+    /**
+     * \brief
+     * \tparam s
+     * \return
+     */
+    template <size_t s = size>
+    std::enable_if_t<(s > 3 && s == size), const T&>
+    a() const
     {
         return w();
     }
@@ -288,7 +378,7 @@ struct Vector {
      */
     VecType& operator*=(T value)
     {
-        for (size_t i; i < size; i++) {
+        for (size_t i = 0; i < size; i++) {
             data[i] *= value;
         }
 
@@ -302,9 +392,9 @@ struct Vector {
      */
     VecType operator*(T value) const
     {
-        auto res = *this;
+        VecType res = *this;
         res *= value;
-        return value;
+        return res;
     }
 
     /**
@@ -470,5 +560,11 @@ struct Vector {
      */
     static const size_t nBytes = sizeof(T) * size;
 };
+
+template <class T, size_t size>
+Vector<T, size> operator*(const T& s, const Vector<T, size>& v)
+{
+    return v * s;
+}
 
 #endif // CPPUTILS_VEC_H

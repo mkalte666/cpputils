@@ -52,14 +52,15 @@ constexpr T radToDeg(T rad)
  * \param deg input angle in degrees
  * \return angle in radians
  */
-constexpr long double operator"" _deg(long double deg)
+constexpr double operator"" _deg(long double deg)
 {
-    return degToRad(deg);
+    return degToRad(static_cast<double>(deg));
 }
 
 /**
  * \brief A unit quaternion
  * \tparam T underlying type
+ * \note For the people like me, who forget: yaw = around z; pitch = around y; roll = around x
  */
 template <class T>
 struct Quaternion : public Vector<T, 4> {
@@ -69,7 +70,7 @@ struct Quaternion : public Vector<T, 4> {
     /**
      * \brief Keep Constructors
      */
-    using VecType::Vector;
+    using Vector<T, 4>::Vector;
 
     /**
      * \brief Set this Quaternions elements from euler angles
@@ -77,17 +78,17 @@ struct Quaternion : public Vector<T, 4> {
      * \param pitch
      * \param roll
      */
-    void setEuler(T yaw, T pitch, T roll)
+    void setEuler(const Vec3Type& euler)
     {
-        T cy = static_cast<T>(cos(static_cast<double>(yaw) * 0.5));
-        T sy = static_cast<T>(sin(static_cast<double>(yaw) * 0.5));
-        T cp = static_cast<T>(cos(static_cast<double>(pitch) * 0.5));
-        T sp = static_cast<T>(sin(static_cast<double>(pitch) * 0.5));
-        T cr = static_cast<T>(cos(static_cast<double>(roll) * 0.5));
-        T sr = static_cast<T>(sin(static_cast<double>(roll) * 0.5));
+        T cy = static_cast<T>(cos(static_cast<double>(euler.z()) * 0.5));
+        T sy = static_cast<T>(sin(static_cast<double>(euler.z()) * 0.5));
+        T cp = static_cast<T>(cos(static_cast<double>(euler.y()) * 0.5));
+        T sp = static_cast<T>(sin(static_cast<double>(euler.y()) * 0.5));
+        T cr = static_cast<T>(cos(static_cast<double>(euler.x()) * 0.5));
+        T sr = static_cast<T>(sin(static_cast<double>(euler.x()) * 0.5));
 
-        this->w() = cy * cp * cr + sy * sp * sr;
-        this->x() = cy * cp * sr - sy * sp * cr;
+        this->w() = cy * cp * cr - sy * sp * sr;
+        this->x() = cy * cp * sr + sy * sp * cr;
         this->y() = sy * cp * sr + cy * sp * cr;
         this->z() = sy * cp * cr - cy * sp * sr;
     }
@@ -99,10 +100,10 @@ struct Quaternion : public Vector<T, 4> {
      * \param roll
      * \return
      */
-    static Quaternion fromEulerAngles(T yaw, T pitch, T roll)
+    static Quaternion fromEulerAngles(const Vec3Type& euler)
     {
         Quaternion q;
-        q.setEuler(yaw, pitch, roll);
+        q.setEuler(euler);
         return q;
     }
 
@@ -112,26 +113,26 @@ struct Quaternion : public Vector<T, 4> {
      * \param pitch
      * \param roll
      */
-    void getEuler(T& yaw, T& pitch, T& roll)
+    void getEuler(Vec3Type& euler)
     {
         double sinr = +2.0 * static_cast<double>(this->w() * this->x() + this->y() * this->z());
         double cosr = +1.0 - 2.0 * static_cast<double>(this->x() * this->x() + this->y() * this->y());
-        roll = static_cast<T>(atan2(sinr, cosr));
+        euler.x() = static_cast<T>(atan2(sinr, cosr));
 
         double sinp = +2.0 * static_cast<double>(this->w() * this->y() - this->z() * this->x());
         if (fabs(sinp) >= 1.0) {
-            pitch = static_cast<T>(copysign(M_PI / 2, sinp));
+            euler.y() = static_cast<T>(copysign(M_PI / 2, sinp));
         } else {
-            pitch = static_cast<T>(asin(sinp));
+            euler.y() = static_cast<T>(asin(sinp));
         }
 
         double siny = +2.0 * static_cast<double>(this->w() * this->z() + this->x() * this->y());
         double cosy = +1.0 - 2.0 * static_cast<double>(this->y() * this->y() + this->z() * this->z());
-        yaw = static_cast<T>(atan2(siny, cosy));
+        euler.z() = static_cast<T>(atan2(siny, cosy));
     }
 
     /**
-     * \brief Multiply two quaterions
+     * \brief Multiply two quaternions
      * \param other
      * \return Reference to this
      */
@@ -161,15 +162,25 @@ struct Quaternion : public Vector<T, 4> {
      * \brief Rotate Vec3 by this quaternion
      * \param in Vec3 to rotate
      * \return Rotated vector
-     * \note Stolen and edited from https://gamedev.stackexchange.com/questions/28395/rotating-vector3-by-a-quaternion
+     * \note Stolen and edited from glm
      */
-    Vec3Type rotate(const Vec3Type& v)
+    Vec3Type rotate(const Vec3Type& v) const
     {
         Vec3Type u = xyz();
-        T s = this->w();
-        return static_cast<T>(2.0) * u.dot(v) * u
-            + (s * s - u.dot(u)) * v
-            + static_cast<T>(2.0) * s * cross(u, v);
+        Vec3Type uv = u.cross(v);
+        Vec3Type uuv = u.cross(uv);
+
+        return v + ((uv * this->w()) + uuv) * static_cast<T>(2);
+    }
+
+    /**
+     * \brief Same as rotate
+     * \param v vector to rotated
+     * \return Rotated vector
+     */
+    Vec3Type operator*(const Vec3Type& v) const
+    {
+        return rotate(v);
     }
 
     /**
