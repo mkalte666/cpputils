@@ -29,6 +29,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} PARENT_SCOPE)
 project(cpputils)
 
 set(utilsIncludeDir ${CMAKE_CURRENT_SOURCE_DIR}/include)
+set(thridpartyDir ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty)
 option(cpputilsBuildExamples OFF)
 option(cpputilsBuildDocs OFF)
 if(${cpputilsBuildDocs})

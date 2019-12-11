@@ -16,3 +16,4 @@
 add_subdirectory(ptrclass)
 add_subdirectory(slotmap)
 add_subdirectory(linalg)
+add_subdirectory(serialization)
