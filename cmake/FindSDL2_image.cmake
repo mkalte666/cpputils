@@ -1,9 +1,9 @@
 # * Find SDL2 Find the SDL2 headers and libraries
 #
-# SDL2::SDL2_IMAGE - Imported target to use for building a library
+# SDL2::SDL2_image - Imported target to use for building a library
 # SDL2_IMAGE_IMAGE_FOUND - True if SDL2 was found. SDL2_IMAGE_IMAGE_DYNAMIC - If
 # we found a DLL version of SDL (meaning you might want to copy a DLL from
-# SDL2::SDL2_IMAGE)
+# SDL2::SDL2_image)
 #
 # 2019 Malte Kießling <mkalte@mkalte.me>: Added support for SDL2_IMAGE_IMAGE
 #
@@ -150,12 +150,12 @@ find_package_handle_standard_args(SDL2_IMAGE
                                   ${SDL2_IMAGE_EXTRA_REQUIRED})
 
 if(SDL2_IMAGE_FOUND)
-  if(NOT TARGET SDL2::SDL2_IMAGE)
-    # Create SDL2::SDL2_IMAGE
+  if(NOT TARGET SDL2::SDL2_image)
+    # Create SDL2::SDL2_image
     if(WIN32 AND SDL2_IMAGE_RUNTIME_LIBRARY)
       set(SDL2_IMAGE_DYNAMIC TRUE)
-      add_library(SDL2::SDL2_IMAGE SHARED IMPORTED)
-      set_target_properties(SDL2::SDL2_IMAGE
+      add_library(SDL2::SDL2_image SHARED IMPORTED)
+      set_target_properties(SDL2::SDL2_image
                             PROPERTIES IMPORTED_IMPLIB
                                        "${SDL2_IMAGE_LIBRARY}"
                                        IMPORTED_LOCATION
@@ -163,12 +163,12 @@ if(SDL2_IMAGE_FOUND)
                                        INTERFACE_INCLUDE_DIRECTORIES
                                        "${SDL2_IMAGE_INCLUDE_DIR}")
     else()
-      add_library(SDL2::SDL2_IMAGE UNKNOWN IMPORTED)
+      add_library(SDL2::SDL2_image UNKNOWN IMPORTED)
       if(SDL2_IMAGE_FRAMEWORK AND SDL2_IMAGE_FRAMEWORK_NAME)
         # Handle the case that SDL2 is a framework and we were able to decompose
         # it above.
         set_target_properties(
-          SDL2::SDL2_IMAGE
+          SDL2::SDL2_image
           PROPERTIES IMPORTED_LOCATION
                      "${SDL2_IMAGE_FRAMEWORK}/${SDL2_IMAGE_FRAMEWORK_NAME}")
       elseif(_SDL2_IMAGE_framework
@@ -180,16 +180,16 @@ if(SDL2_IMAGE_FOUND)
         # sets it (as a child of the framework) as the imported location for the
         # target. This is the library symlink inside of the framework.
         set_target_properties(
-          SDL2::SDL2_IMAGE
+          SDL2::SDL2_image
           PROPERTIES IMPORTED_LOCATION "${SDL2_IMAGE_LIBRARY}/${CMAKE_MATCH_1}")
       else()
         # Handle non-frameworks (including non-Mac), as well as the case that
         # we're given the library inside of the framework
-        set_target_properties(SDL2::SDL2_IMAGE
+        set_target_properties(SDL2::SDL2_image
                               PROPERTIES IMPORTED_LOCATION
                                          "${SDL2_IMAGE_LIBRARY}")
       endif()
-      set_target_properties(SDL2::SDL2_IMAGE
+      set_target_properties(SDL2::SDL2_image
                             PROPERTIES INTERFACE_INCLUDE_DIRECTORIES
                                        "${SDL2_IMAGE_INCLUDE_DIR}")
     endif()
@@ -199,7 +199,7 @@ if(SDL2_IMAGE_FOUND)
       find_library(SDL2_IMAGE_COCOA_LIBRARY Cocoa)
       list(APPEND SDL2_IMAGE_EXTRA_REQUIRED SDL2_IMAGE_COCOA_LIBRARY)
       if(SDL2_IMAGE_COCOA_LIBRARY)
-        set_target_properties(SDL2::SDL2_IMAGE
+        set_target_properties(SDL2::SDL2_image
                               PROPERTIES IMPORTED_LINK_INTERFACE_LIBRARIES
                                          ${SDL2_IMAGE_COCOA_LIBRARY})
       endif()

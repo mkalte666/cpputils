@@ -1,8 +1,8 @@
 # * Find SDL2 Find the SDL2 headers and libraries
 #
-# SDL2::SDL2_Net - Imported target to use for building a library SDL2_NET_FOUND
+# SDL2::SDL2_net - Imported target to use for building a library SDL2_NET_FOUND
 # - True if SDL2 was found. SDL2_NET_DYNAMIC - If we found a DLL version of SDL
-# (meaning you might want to copy a DLL from SDL2::SDL2_Net)
+# (meaning you might want to copy a DLL from SDL2::SDL2_net)
 #
 # 2019 Malte Kießling <mkalte@mkalte.me>: Added support for SDL2_NET
 #
@@ -149,12 +149,12 @@ find_package_handle_standard_args(SDL2_NET
                                   ${SDL2_NET_EXTRA_REQUIRED})
 
 if(SDL2_NET_FOUND)
-  if(NOT TARGET SDL2::SDL2_Net)
-    # Create SDL2::SDL2_Net
+  if(NOT TARGET SDL2::SDL2_net)
+    # Create SDL2::SDL2_net
     if(WIN32 AND SDL2_NET_RUNTIME_LIBRARY)
       set(SDL2_NET_DYNAMIC TRUE)
-      add_library(SDL2::SDL2_Net SHARED IMPORTED)
-      set_target_properties(SDL2::SDL2_Net
+      add_library(SDL2::SDL2_net SHARED IMPORTED)
+      set_target_properties(SDL2::SDL2_net
                             PROPERTIES IMPORTED_IMPLIB
                                        "${SDL2_NET_LIBRARY}"
                                        IMPORTED_LOCATION
@@ -162,12 +162,12 @@ if(SDL2_NET_FOUND)
                                        INTERFACE_INCLUDE_DIRECTORIES
                                        "${SDL2_NET_INCLUDE_DIR}")
     else()
-      add_library(SDL2::SDL2_Net UNKNOWN IMPORTED)
+      add_library(SDL2::SDL2_net UNKNOWN IMPORTED)
       if(SDL2_NET_FRAMEWORK AND SDL2_NET_FRAMEWORK_NAME)
         # Handle the case that SDL2 is a framework and we were able to decompose
         # it above.
         set_target_properties(
-          SDL2::SDL2_Net
+          SDL2::SDL2_net
           PROPERTIES IMPORTED_LOCATION
                      "${SDL2_NET_FRAMEWORK}/${SDL2_NET_FRAMEWORK_NAME}")
       elseif(_SDL2_NET_framework
@@ -178,17 +178,17 @@ if(SDL2_NET_FOUND)
         # This takes the basename of the framework, without the extension, and
         # sets it (as a child of the framework) as the imported location for the
         # target. This is the library symlink inside of the framework.
-        set_target_properties(SDL2::SDL2_Net
+        set_target_properties(SDL2::SDL2_net
                               PROPERTIES IMPORTED_LOCATION
                                          "${SDL2_NET_LIBRARY}/${CMAKE_MATCH_1}")
       else()
         # Handle non-frameworks (including non-Mac), as well as the case that
         # we're given the library inside of the framework
         set_target_properties(
-          SDL2::SDL2_Net
+          SDL2::SDL2_net
           PROPERTIES IMPORTED_LOCATION "${SDL2_NET_LIBRARY}")
       endif()
-      set_target_properties(SDL2::SDL2_Net
+      set_target_properties(SDL2::SDL2_net
                             PROPERTIES INTERFACE_INCLUDE_DIRECTORIES
                                        "${SDL2_NET_INCLUDE_DIR}")
     endif()
@@ -198,7 +198,7 @@ if(SDL2_NET_FOUND)
       find_library(SDL2_NET_COCOA_LIBRARY Cocoa)
       list(APPEND SDL2_NET_EXTRA_REQUIRED SDL2_NET_COCOA_LIBRARY)
       if(SDL2_NET_COCOA_LIBRARY)
-        set_target_properties(SDL2::SDL2_Net
+        set_target_properties(SDL2::SDL2_net
                               PROPERTIES IMPORTED_LINK_INTERFACE_LIBRARIES
                                          ${SDL2_NET_COCOA_LIBRARY})
       endif()
