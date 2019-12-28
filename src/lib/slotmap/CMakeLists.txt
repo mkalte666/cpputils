@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License along with
 # this program.  If not, see <https://www.gnu.org/licenses/>.
 #
-set(_cpputils_slotmap_sources ${utilsIncludeDir}/ptrclass/ptrclass.h)
+set(_cpputils_slotmap_sources ${utilsIncludeDir}/slotmap/slotmap.h)
 
 add_library(_cpputils_slotmap INTERFACE)
 target_include_directories(_cpputils_slotmap

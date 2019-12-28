@@ -13,5 +13,23 @@
 
 # You should have received a copy of the GNU General Public License along with
 # this program.  If not, see <https://www.gnu.org/licenses/>.
-add_subdirectory(example_ptrclass)
-add_subdirectory(example_uuid)
+#
+set(_cpputils_uuid_sources ${utilsIncludeDir}/uuid/uuid.h uuid.cpp)
+
+add_library(_cpputils_uuid STATIC)
+target_include_directories(_cpputils_uuid PUBLIC ${utilsIncludeDir}/uuid)
+target_sources(_cpputils_uuid PRIVATE ${_cpputils_uuid_sources})
+
+target_link_libraries(_cpputils_uuid PUBLIC cpputils::serialization)
+
+add_library(cpputils::uuid ALIAS _cpputils_uuid)
+
+if(${cpputilsBuildDocs})
+  doxygen_add_docs(cpputils_uuid_doc
+                   ${_cpputils_uuid_sources}
+                   COMMENT
+                   "PtrClass Documentaion")
+  add_dependencies(_cpputils_uuid cpputils_uuid_doc)
+endif()
+
+enablestrictoptions(_cpputils_uuid)

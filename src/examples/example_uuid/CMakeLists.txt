@@ -13,5 +13,6 @@
 
 # You should have received a copy of the GNU General Public License along with
 # this program.  If not, see <https://www.gnu.org/licenses/>.
-add_subdirectory(example_ptrclass)
-add_subdirectory(example_uuid)
+
+add_executable(example_uuid example_uuid.cpp)
+target_link_libraries(example_uuid cpputils::uuid)

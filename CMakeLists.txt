@@ -37,8 +37,10 @@ if(${cpputilsBuildDocs})
   find_package(Doxygen REQUIRED)
 endif()
 
-add_subdirectory(src)
-
 include(cmake/funcForceOutputPrefixded.cmake)
 include(cmake/funcRuntimeCopy.cmake)
 include(cmake/funcEnableStrictOptions.cmake)
+
+add_subdirectory(src)
+
+
