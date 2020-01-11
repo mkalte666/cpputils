@@ -64,15 +64,12 @@ endif()
 
 include(FindPackageHandleStandardArgs)
 
-find_library(SDL2_NET_LIBRARY
-             NAMES SDL2_Net SDL2_net
-             HINTS ${SDL2_NET_LIB_HINTS}
-             PATHS ${SDL2_NET_ROOT_DIR}
-                   ENV
-                   SDL2DIR
-                   ENV
-                   SDL2NETDIR
-             PATH_SUFFIXES lib SDL2 ${SDL2_NET_LIB_PATH_SUFFIX})
+find_library(
+  SDL2_NET_LIBRARY
+  NAMES SDL2_Net SDL2_net
+  HINTS ${SDL2_NET_LIB_HINTS}
+  PATHS ${SDL2_NET_ROOT_DIR} ENV SDL2DIR ENV SDL2NETDIR
+  PATH_SUFFIXES lib SDL2 ${SDL2_NET_LIB_PATH_SUFFIX})
 
 set(_SDL2_NET_framework FALSE)
 # Some special-casing if we've found/been given a framework. Handles whether
@@ -89,9 +86,10 @@ if(APPLE AND "${SDL2_NET_LIBRARY}" MATCHES "(/[^/]+)*.framework(/.*)?$")
     set(SDL2_NET_FRAMEWORK_NAME ${CMAKE_MATCH_1})
     # If we found a framework, do a search for the header ahead of time that
     # will be more likely to get the framework header.
-    find_path(SDL2_NET_INCLUDE_DIR
-              NAMES SDL_NET.h # this file was introduced with SDL2
-              HINTS "${SDL2_NET_FRAMEWORK}/Headers/")
+    find_path(
+      SDL2_NET_INCLUDE_DIR
+      NAMES SDL_NET.h # this file was introduced with SDL2
+      HINTS "${SDL2_NET_FRAMEWORK}/Headers/")
   else()
     # For some reason we couldn't get the framework directory itself. Shouldn't
     # happen, but might if something is weird.
@@ -99,30 +97,21 @@ if(APPLE AND "${SDL2_NET_LIBRARY}" MATCHES "(/[^/]+)*.framework(/.*)?$")
   endif()
 endif()
 
-find_path(SDL2_NET_INCLUDE_DIR
-          NAMES SDL_Net.h # sdl2 net
-                SDL_net.h
-          HINTS ${SDL2_NET_INCLUDE_HINTS}
-          PATHS ${SDL2_NET_ROOT_DIR}
-                ENV
-                SDL2DIR
-                ENV
-                SDL2NETDIR
-          PATH_SUFFIXES include
-                        include/sdl2
-                        include/SDL2
-                        SDL2)
+find_path(
+  SDL2_NET_INCLUDE_DIR
+  NAMES SDL_Net.h # sdl2 net
+        SDL_net.h
+  HINTS ${SDL2_NET_INCLUDE_HINTS}
+  PATHS ${SDL2_NET_ROOT_DIR} ENV SDL2DIR ENV SDL2NETDIR
+  PATH_SUFFIXES include include/sdl2 include/SDL2 SDL2)
 
 if(WIN32 AND SDL2_NET_LIBRARY)
-  find_file(SDL2_NET_RUNTIME_LIBRARY
-            NAMES SDL2_Net.dll libSDL2_Net.dll
-            HINTS ${SDL2_NET_LIB_HINTS}
-            PATHS ${SDL2_NET_ROOT_DIR}
-                  ENV
-                  SDL2DIR
-                  ENV
-                  SDL2NETDIR
-            PATH_SUFFIXES bin lib ${SDL2_NET_LIB_PATH_SUFFIX})
+  find_file(
+    SDL2_NET_RUNTIME_LIBRARY
+    NAMES SDL2_Net.dll libSDL2_Net.dll
+    HINTS ${SDL2_NET_LIB_HINTS}
+    PATHS ${SDL2_NET_ROOT_DIR} ENV SDL2DIR ENV SDL2NETDIR
+    PATH_SUFFIXES bin lib ${SDL2_NET_LIB_PATH_SUFFIX})
   get_filename_component(SDL2_NET_RUNTIME_LIBRARY_FOLDER
                          ${SDL2_NET_RUNTIME_LIBRARY} DIRECTORY)
   file(GLOB SDL2_NET_RUNTIME_LIBRARY_ADDITIONALS
@@ -142,11 +131,9 @@ endif()
 # handle the QUIETLY and REQUIRED arguments and set QUATLIB_FOUND to TRUE if all
 # listed variables are TRUE
 include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(SDL2_NET
-                                  DEFAULT_MSG
-                                  SDL2_NET_LIBRARY
-                                  SDL2_NET_INCLUDE_DIR
-                                  ${SDL2_NET_EXTRA_REQUIRED})
+find_package_handle_standard_args(
+  SDL2_NET DEFAULT_MSG SDL2_NET_LIBRARY SDL2_NET_INCLUDE_DIR
+  ${SDL2_NET_EXTRA_REQUIRED})
 
 if(SDL2_NET_FOUND)
   if(NOT TARGET SDL2::SDL2_net)
@@ -154,13 +141,11 @@ if(SDL2_NET_FOUND)
     if(WIN32 AND SDL2_NET_RUNTIME_LIBRARY)
       set(SDL2_NET_DYNAMIC TRUE)
       add_library(SDL2::SDL2_net SHARED IMPORTED)
-      set_target_properties(SDL2::SDL2_net
-                            PROPERTIES IMPORTED_IMPLIB
-                                       "${SDL2_NET_LIBRARY}"
-                                       IMPORTED_LOCATION
-                                       "${SDL2_NET_RUNTIME_LIBRARY}"
-                                       INTERFACE_INCLUDE_DIRECTORIES
-                                       "${SDL2_NET_INCLUDE_DIR}")
+      set_target_properties(
+        SDL2::SDL2_net
+        PROPERTIES IMPORTED_IMPLIB "${SDL2_NET_LIBRARY}"
+                   IMPORTED_LOCATION "${SDL2_NET_RUNTIME_LIBRARY}"
+                   INTERFACE_INCLUDE_DIRECTORIES "${SDL2_NET_INCLUDE_DIR}")
     else()
       add_library(SDL2::SDL2_net UNKNOWN IMPORTED)
       if(SDL2_NET_FRAMEWORK AND SDL2_NET_FRAMEWORK_NAME)
@@ -170,27 +155,26 @@ if(SDL2_NET_FOUND)
           SDL2::SDL2_net
           PROPERTIES IMPORTED_LOCATION
                      "${SDL2_NET_FRAMEWORK}/${SDL2_NET_FRAMEWORK_NAME}")
-      elseif(_SDL2_NET_framework
-             AND SDL2_NET_LIBRARY MATCHES "(/[^/]+)*.framework$")
+      elseif(_SDL2_NET_framework AND SDL2_NET_LIBRARY MATCHES
+                                     "(/[^/]+)*.framework$")
         # Handle the case that SDL2 is a framework and SDL_LIBRARY is just the
         # framework itself.
 
         # This takes the basename of the framework, without the extension, and
         # sets it (as a child of the framework) as the imported location for the
         # target. This is the library symlink inside of the framework.
-        set_target_properties(SDL2::SDL2_net
-                              PROPERTIES IMPORTED_LOCATION
-                                         "${SDL2_NET_LIBRARY}/${CMAKE_MATCH_1}")
+        set_target_properties(
+          SDL2::SDL2_net PROPERTIES IMPORTED_LOCATION
+                                    "${SDL2_NET_LIBRARY}/${CMAKE_MATCH_1}")
       else()
         # Handle non-frameworks (including non-Mac), as well as the case that
         # we're given the library inside of the framework
-        set_target_properties(
-          SDL2::SDL2_net
-          PROPERTIES IMPORTED_LOCATION "${SDL2_NET_LIBRARY}")
+        set_target_properties(SDL2::SDL2_net PROPERTIES IMPORTED_LOCATION
+                                                        "${SDL2_NET_LIBRARY}")
       endif()
-      set_target_properties(SDL2::SDL2_net
-                            PROPERTIES INTERFACE_INCLUDE_DIRECTORIES
-                                       "${SDL2_NET_INCLUDE_DIR}")
+      set_target_properties(
+        SDL2::SDL2_net PROPERTIES INTERFACE_INCLUDE_DIRECTORIES
+                                  "${SDL2_NET_INCLUDE_DIR}")
     endif()
 
     if(APPLE)
@@ -198,9 +182,9 @@ if(SDL2_NET_FOUND)
       find_library(SDL2_NET_COCOA_LIBRARY Cocoa)
       list(APPEND SDL2_NET_EXTRA_REQUIRED SDL2_NET_COCOA_LIBRARY)
       if(SDL2_NET_COCOA_LIBRARY)
-        set_target_properties(SDL2::SDL2_net
-                              PROPERTIES IMPORTED_LINK_INTERFACE_LIBRARIES
-                                         ${SDL2_NET_COCOA_LIBRARY})
+        set_target_properties(
+          SDL2::SDL2_net PROPERTIES IMPORTED_LINK_INTERFACE_LIBRARIES
+                                    ${SDL2_NET_COCOA_LIBRARY})
       endif()
     endif()
 
@@ -228,9 +212,6 @@ if(SDL2_NET_FOUND)
   mark_as_advanced(SDL2_NET_ROOT_DIR)
 endif()
 
-mark_as_advanced(SDL2_NET_LIBRARY
-                 SDL2_NET_RUNTIME_LIBRARY
-                 SDL2_NET_INCLUDE_DIR
-                 SDL2_NET_COCOA_LIBRARY
-                 SDL2_NET_MINGW_LIBRARY
-                 SDL2_NET_MWINDOWS_LIBRARY)
+mark_as_advanced(
+  SDL2_NET_LIBRARY SDL2_NET_RUNTIME_LIBRARY SDL2_NET_INCLUDE_DIR
+  SDL2_NET_COCOA_LIBRARY SDL2_NET_MINGW_LIBRARY SDL2_NET_MWINDOWS_LIBRARY)

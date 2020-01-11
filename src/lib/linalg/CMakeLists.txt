@@ -24,9 +24,7 @@ target_sources(_cpputils_linalg INTERFACE ${_cpputils_linalg_sources})
 add_library(cpputils::linalg ALIAS _cpputils_linalg)
 
 if(${cpputilsBuildDocs})
-  doxygen_add_docs(cpputils_linalg_doc
-                   ${_cpputils_linalg_sources}
-                   COMMENT
+  doxygen_add_docs(cpputils_linalg_doc ${_cpputils_linalg_sources} COMMENT
                    "LinAlg Documentaion")
   add_dependencies(_cpputils_linalg cpputils_linalg_doc)
 endif()

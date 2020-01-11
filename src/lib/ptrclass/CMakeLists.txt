@@ -24,9 +24,7 @@ target_sources(_cpputils_ptrclass INTERFACE ${_cpputils_ptrclass_sources})
 add_library(cpputils::ptrclass ALIAS _cpputils_ptrclass)
 
 if(${cpputilsBuildDocs})
-  doxygen_add_docs(cpputils_ptrclass_doc
-                   ${_cpputils_ptrclass_sources}
-                   COMMENT
+  doxygen_add_docs(cpputils_ptrclass_doc ${_cpputils_ptrclass_sources} COMMENT
                    "PtrClass Documentaion")
   add_dependencies(_cpputils_ptrclass cpputils_ptrclass_doc)
 endif()

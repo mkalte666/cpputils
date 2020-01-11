@@ -25,9 +25,7 @@ target_link_libraries(_cpputils_uuid PUBLIC cpputils::serialization)
 add_library(cpputils::uuid ALIAS _cpputils_uuid)
 
 if(${cpputilsBuildDocs})
-  doxygen_add_docs(cpputils_uuid_doc
-                   ${_cpputils_uuid_sources}
-                   COMMENT
+  doxygen_add_docs(cpputils_uuid_doc ${_cpputils_uuid_sources} COMMENT
                    "PtrClass Documentaion")
   add_dependencies(_cpputils_uuid cpputils_uuid_doc)
 endif()

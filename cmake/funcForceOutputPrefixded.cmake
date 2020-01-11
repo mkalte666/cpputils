@@ -15,10 +15,18 @@
 # this program.  If not, see <https://www.gnu.org/licenses/>.
 
 function(forceOutputPrefixed prefixDirectory)
-  set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${prefixDirectory}/lib PARENT_SCOPE)
-  set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${prefixDirectory}/lib PARENT_SCOPE)
-  set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${prefixDirectory}/bin PARENT_SCOPE)
-  set(DOXYGEN_OUTPUT_DIRECTORY ${prefixDirectory}/doc PARENT_SCOPE)
+  set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY
+      ${prefixDirectory}/lib
+      PARENT_SCOPE)
+  set(CMAKE_LIBRARY_OUTPUT_DIRECTORY
+      ${prefixDirectory}/lib
+      PARENT_SCOPE)
+  set(CMAKE_RUNTIME_OUTPUT_DIRECTORY
+      ${prefixDirectory}/bin
+      PARENT_SCOPE)
+  set(DOXYGEN_OUTPUT_DIRECTORY
+      ${prefixDirectory}/doc
+      PARENT_SCOPE)
   foreach(OUTPUTCONFIG ${CMAKE_CONFIGURATION_TYPES})
     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_${OUTPUTCONFIG}
         ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}

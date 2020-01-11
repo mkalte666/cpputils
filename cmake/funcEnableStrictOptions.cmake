@@ -25,6 +25,12 @@ function(enableStrictOptions target)
       -pedantic
       -Wextra
       -Wconversion
+      -Wold-style-cast
+      -Wuninitialized
+      -Wunreachable-code
+      -Wshadow
+      -Wfloat-equal
+      -Weffc++
       -Wsign-conversion>
       $<$<CXX_COMPILER_ID:MSVC>:
       /W4

@@ -24,9 +24,7 @@ target_sources(_cpputils_slotmap INTERFACE ${_cpputils_slotmap_sources})
 add_library(cpputils::slotmap ALIAS _cpputils_slotmap)
 
 if(${cpputilsBuildDocs})
-  doxygen_add_docs(cpputils_slotmap_doc
-                   ${_cpputils_slotmap_sources}
-                   COMMENT
+  doxygen_add_docs(cpputils_slotmap_doc ${_cpputils_slotmap_sources} COMMENT
                    "PtrClass Documentaion")
   add_dependencies(_cpputils_slotmap cpputils_slotmap_doc)
 endif()

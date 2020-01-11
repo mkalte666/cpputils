@@ -22,15 +22,14 @@ target_include_directories(_cpputils_serialization
                            INTERFACE ${utilsIncludeDir}/serialization)
 target_include_directories(_cpputils_serialization
                            INTERFACE ${thridpartyDir}/json/include/)
-target_sources(_cpputils_serialization INTERFACE
-               ${_cpputils_serialization_sources})
+target_sources(_cpputils_serialization
+               INTERFACE ${_cpputils_serialization_sources})
 
 add_library(cpputils::serialization ALIAS _cpputils_serialization)
 
 if(${cpputilsBuildDocs})
-  doxygen_add_docs(cpputils_serialization_doc
-                   ${_cpputils_serialization_sources}
-                   COMMENT
-                   "serialization Documentaion")
+  doxygen_add_docs(
+    cpputils_serialization_doc ${_cpputils_serialization_sources} COMMENT
+    "serialization Documentaion")
   add_dependencies(_cpputils_serialization cpputils_serialization_doc)
 endif()
