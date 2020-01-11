@@ -40,6 +40,7 @@ endif()
 include(cmake/funcForceOutputPrefixded.cmake)
 include(cmake/funcRuntimeCopy.cmake)
 include(cmake/funcEnableStrictOptions.cmake)
+include(cmake/funcEnableStrictClangTidy.cmake)
 
 add_subdirectory(src)
 
