@@ -21,7 +21,7 @@ function(enableStrictClangTidy headerFilter )
         set(CMAKE_CXX_CLANG_TIDY
                 ${ctidy};
                 -header-filter=${headerFilter};
-                -checks=clang-analyzer-*,bugprone-*,cert-*,hicpp-*,modernize-*,readability-*,portability-*,cppcoreguidelines-*,performance-*,-modernize-use-trailing-return-type;
+                -checks=clang-analyzer-*,bugprone-*,cert-*,hicpp-*,modernize-*,readability-*,-readability-named-parameter,portability-*,cppcoreguidelines-*,performance-*,-modernize-use-trailing-return-type;
                 -warnings-as-errors=*; PARENT_SCOPE)
         message(STATUS ${CMAKE_CXX_CLANG_TIDY})
     else()
