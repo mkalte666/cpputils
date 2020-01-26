@@ -14,17 +14,15 @@
 # You should have received a copy of the GNU General Public License along with
 # this program.  If not, see <https://www.gnu.org/licenses/>.
 
-function(enableStrictClangTidy headerFilter )
-    find_program(ctidy clang-tidy)
-    if (ctidy)
-        message(STATUS "Clang tidy found at ${ctidy}")
-        set(CMAKE_CXX_CLANG_TIDY
-                ${ctidy};
-                -header-filter=${headerFilter};
-                -checks=clang-analyzer-*,bugprone-*,cert-*,hicpp-*,modernize-*,readability-*,-readability-named-parameter,portability-*,cppcoreguidelines-*,performance-*,-modernize-use-trailing-return-type;
-                -warnings-as-errors=*; PARENT_SCOPE)
-        message(STATUS ${CMAKE_CXX_CLANG_TIDY})
-    else()
-        message(WARNING "Clang tidy not found!")
-        endif()
+function(enableClangTidy)
+  find_program(ctidy clang-tidy)
+  if(ctidy)
+    message(STATUS "Clang tidy found at ${ctidy}")
+    set(CMAKE_CXX_CLANG_TIDY
+        ${ctidy} --config=
+        PARENT_SCOPE)
+    message(STATUS ${CMAKE_CXX_CLANG_TIDY})
+  else()
+    message(WARNING "Clang tidy not found!")
+  endif()
 endfunction()
